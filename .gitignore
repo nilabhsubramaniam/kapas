@@ -72,3 +72,8 @@ dump.rdb
 
 # PostgreSQL data (for local docker)
 .postgres-data/
+
+# Temporary development files
+PRODUCT_IMPLEMENTATION_SUMMARY.md
+cmd/check/
+cmd/migrate/
