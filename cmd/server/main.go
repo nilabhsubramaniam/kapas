@@ -6,7 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
+	_ "github.com/nilabhsubramaniam/kapas/docs" // Import generated docs
 	"github.com/nilabhsubramaniam/kapas/internal/config"
 	"github.com/nilabhsubramaniam/kapas/internal/handlers"
 	"github.com/nilabhsubramaniam/kapas/internal/middleware"
@@ -74,6 +77,12 @@ func main() {
 			"status":   "healthy",
 			"database": config.CheckDatabaseHealth(),
 		})
+	})
+
+	// Swagger documentation
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/docs", func(c *gin.Context) {
+		c.Redirect(302, "/swagger/index.html")
 	})
 
 	// API routes

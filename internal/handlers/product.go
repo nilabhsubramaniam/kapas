@@ -35,7 +35,24 @@ type ProductImageInput struct {
 	IsPrimary    bool   `json:"is_primary"`
 }
 
-// ListProducts returns paginated product list with filters
+// ListProducts godoc
+// @Summary List all products
+// @Description Get paginated list of products with optional filters
+// @Tags Products
+// @Produce json
+// @Param page query int false "Page number" default(1)
+// @Param per_page query int false "Items per page" default(20)
+// @Param state query string false "State origin (UP, KL, TN, KA, WB)"
+// @Param saree_type query string false "Saree type (Chikankari, Kasavu, Kanchipuram, etc.)"
+// @Param fabric query string false "Fabric type (Cotton, Silk, Georgette, etc.)"
+// @Param product_type query string false "Product type (SAREE, CHIKANKARI_KURTI, etc.)"
+// @Param occasion query string false "Occasion (Wedding, Festival, Casual, Party)"
+// @Param min_price query number false "Minimum price"
+// @Param max_price query number false "Maximum price"
+// @Param sort query string false "Sort field (created_at, price, name)" default(created_at)
+// @Param order query string false "Sort order (asc, desc)" default(desc)
+// @Success 200 {object} PaginatedProductsResponse "Paginated products list"
+// @Router /products [get]
 func ListProducts(c *gin.Context) {
 	pagination := utils.GetPaginationParams(c)
 	
@@ -109,7 +126,16 @@ func GetProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, product)
 }
 
-// GetProductsByState returns products filtered by state
+// GetProductsByState godoc
+// @Summary Get products by state
+// @Description Get paginated list of products filtered by state origin
+// @Tags Products
+// @Produce json
+// @Param state path string true "State code (UP, KL, TN, KA, WB)"
+// @Param page query int false "Page number" default(1)
+// @Param per_page query int false "Items per page" default(20)
+// @Success 200 {object} map[string]interface{} "Paginated products list"
+// @Router /products/state/{state} [get]
 func GetProductsByState(c *gin.Context) {
 	state := c.Param("state")
 	pagination := utils.GetPaginationParams(c)

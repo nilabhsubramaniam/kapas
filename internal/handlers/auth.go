@@ -13,18 +13,29 @@ import (
 )
 
 type RegisterRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,min=6"`
-	Name     string `json:"name" binding:"required"`
-	Phone    string `json:"phone"`
+	Email    string `json:"email" binding:"required,email" example:"user@example.com"`
+	Password string `json:"password" binding:"required,min=6" example:"password123"`
+	Name     string `json:"name" binding:"required" example:"John Doe"`
+	Phone    string `json:"phone" example:"+919876543210"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required,email" example:"user@example.com"`
+	Password string `json:"password" binding:"required" example:"password123"`
 }
 
-// Register creates a new user account
+// Register godoc
+// @Summary Register a new user
+// @Description Create a new user account with email and password
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body RegisterRequest true "Registration details"
+// @Success 201 {object} RegisterResponse "User registered successfully"
+// @Failure 400 {object} ErrorResponse "Invalid request"
+// @Failure 409 {object} ErrorResponse "Email already registered"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /auth/register [post]
 func Register(c *gin.Context) {
 	var req RegisterRequest
 
@@ -81,7 +92,18 @@ func Register(c *gin.Context) {
 	})
 }
 
-// Login authenticates a user
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user with email and password, returns JWT token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "Login credentials"
+// @Success 200 {object} LoginResponse "Login successful"
+// @Failure 400 {object} ErrorResponse "Invalid request"
+// @Failure 401 {object} ErrorResponse "Invalid credentials"
+// @Failure 500 {object} ErrorResponse "Internal server error"
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
 	var req LoginRequest
 
@@ -133,7 +155,16 @@ func Login(c *gin.Context) {
 	})
 }
 
-// GetCurrentUser returns authenticated user's information
+// GetCurrentUser godoc
+// @Summary Get current user
+// @Description Get authenticated user's profile information
+// @Tags Authentication
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} UserResponse "User details"
+// @Failure 401 {object} ErrorResponse "Unauthorized"
+// @Failure 404 {object} ErrorResponse "User not found"
+// @Router /auth/me [get]
 func GetCurrentUser(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -158,7 +189,14 @@ func GetCurrentUser(c *gin.Context) {
 	})
 }
 
-// Logout handles user logout (placeholder - JWT is stateless)
+// Logout godoc
+// @Summary Logout user
+// @Description Invalidate current session (client should discard token)
+// @Tags Authentication
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} MessageResponse "Logged out successfully"
+// @Router /auth/logout [post]
 func Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Logged out successfully",
