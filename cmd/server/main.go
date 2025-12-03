@@ -143,20 +143,24 @@ func main() {
 		admin := api.Group("/admin")
 		admin.Use(middleware.AuthMiddleware(), middleware.AdminOnly())
 		{
-			// Dashboard
+			// Dashboard & Analytics
 			admin.GET("/dashboard", handlers.GetDashboard)
+			admin.GET("/analytics/sales", handlers.GetSalesAnalytics)
+			admin.GET("/analytics/revenue", handlers.GetRevenueAnalytics)
 
-			// Order management
+			// User Management
+			admin.GET("/users", handlers.ListAllUsers)
+			admin.GET("/users/:id", handlers.GetUserDetails)
+			admin.GET("/users/:id/orders", handlers.GetUserOrders)
+			admin.PUT("/users/:id/status", handlers.UpdateUserStatus)
+
+			// Order Management
 			admin.GET("/orders", handlers.ListAllOrders)
 			admin.PUT("/orders/:id/status", handlers.UpdateOrderStatus)
 
-			// Inventory
+			// Inventory Management
 			admin.GET("/inventory", handlers.GetInventory)
 			admin.PUT("/inventory/:id", handlers.UpdateInventory)
-
-			// Analytics
-			admin.GET("/analytics/sales", handlers.GetSalesAnalytics)
-			admin.GET("/analytics/revenue", handlers.GetRevenueAnalytics)
 		}
 	}
 
